@@ -1,4 +1,4 @@
-name: Auto Build Blog
+name: Auto Full Static Build
 on:
   push:
     branches: [ main ]
@@ -7,85 +7,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install parse dependencies
-        run: npm install gray-matter marked yaml
+      - name: Install packages
+        run: npm install gray-matter marked
 
-      - name: Parse MD & Generate JSON + RSS
+      - name: Build all static pages & RSS
         run: |
-          node -e '
-          const fs = require("fs");
-          const path = require("path");
-          const matter = require("gray-matter");
-          const marked = require("marked");
-          const config = require("./_config.yml");
-          if (!fs.existsSync("./temp")) fs.mkdirSync("./temp");
+          node build.js
 
-          // 解析文章
-          const postDir = "./source/posts";
-          const postFiles = fs.readdirSync(postDir).filter(f=>f.endsWith(".md"));
-          let posts = [];
-          postFiles.forEach(file=>{
-            const raw = fs.readFileSync(path.join(postDir, file), "utf8");
-            const {data, content} = matter(raw);
-            posts.push({
-              id: file.replace(".md", ""),
-              title: data.title || "无标题",
-              date: data.date,
-              cover: data.cover || config.site.random_cover_api,
-              html: marked.parse(content),
-              excerpt: marked.parse(content).replace(/<[^>]*>/g, "").slice(0,100)
-            })
-          });
-          posts.sort((a,b)=>new Date(b.date)-new Date(a.date));
-          fs.writeFileSync("./temp/posts.json", JSON.stringify(posts,null,2), "utf8");
-
-          // 解析说说
-          const talkDir = "./source/talks";
-          const talkFiles = fs.readdirSync(talkDir).filter(f=>f.endsWith(".md"));
-          let talks = [];
-          talkFiles.forEach(file=>{
-            const raw = fs.readFileSync(path.join(talkDir, file), "utf8");
-            const {data, content} = matter(raw);
-            talks.push({
-              id: file.replace(".md", ""),
-              time: data.date,
-              html: marked.parse(content)
-            })
-          });
-          talks.sort((a,b)=>new Date(b.time)-new Date(a.time));
-          fs.writeFileSync("./temp/talks.json", JSON.stringify(talks,null,2), "utf8");
-
-          // 生成RSS feed.xml
-          let rss = `<rss version="2.0">
-<channel>
-<title>${config.site.title}</title>
-<link>${config.site.url}</link>
-<description>${config.site.description}</description>
-`;
-          posts.slice(0, config.site.rss_limit).forEach(p=>{
-            rss += `
-<item>
-<title>${p.title}</title>
-<link>${config.site.url}/post.html?id=${p.id}</link>
-<pubDate>${new Date(p.date).toUTCString()}</pubDate>
-<description>${p.excerpt}</description>
-</item>
-`;
-          });
-          rss += `</channel></rss>`;
-          fs.writeFileSync("./feed.xml", rss, "utf8");
-          '
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./dist
