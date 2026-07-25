@@ -3,40 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文章详情</title>
+<title><!--ARTICLE_TITLE--> | <!--SITE_TITLE--></title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
-  <h1><a href="index.html" style="color:#000;text-decoration:none;">Neko Blog</a></h1>
+  <h1><!--SITE_TITLE--></h1>
   <nav style="margin-top:0.5rem;">
-    <a href="index.html">← 返回首页</a>
+    <!--NAV_LINKS-->
   </nav>
 </header>
 
-<main id="articleBox"></main>
+<main id="articleBox">
+<!--REPLACE_ARTICLE_CONTENT-->
+</main>
 
-<footer></footer>
-
-<script src="js/main.js"></script>
-<script>
-(async ()=>{
-  const pid = getUrlParam("id");
-  const allPosts = await loadPosts();
-  const data = allPosts.find(v => v.id === pid);
-
-  if (!data) {
-    document.body.innerHTML = '<h2>文章不存在</h2><p><a href="index.html">返回首页</a></p>';
-    return;
-  }
-
-  document.getElementById("articleBox").innerHTML = `
-    <img class="post-big-img" src="${data.cover}">
-    <h1>${data.title}</h1>
-    <div class="meta">发布于 ${data.date}</div>
-    <div style="margin-top:2rem;">${data.html}</div>
-  `;
-})()
-</script>
+<footer>© <!--SITE_AUTHOR--></footer>
 </body>
 </html>
