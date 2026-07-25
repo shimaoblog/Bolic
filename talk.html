@@ -3,35 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>说说</title>
+<title>说说 | <!--SITE_TITLE--></title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
-  <h1>说说 / Talk</h1>
+  <h1><!--SITE_TITLE--></h1>
   <nav style="margin-top:0.5rem;">
-    <a href="index.html">← 返回首页</a>
+    <!--NAV_LINKS-->
   </nav>
 </header>
 
-<main id="talkList"></main>
+<main id="talkList">
+<!--REPLACE_TALK_LIST-->
+</main>
 
-<footer></footer>
-
-<script src="js/main.js"></script>
-<script>
-(async ()=>{
-  const talks = await loadTalks();
-  const box = document.getElementById("talkList");
-  talks.forEach(item => {
-    box.innerHTML += `
-      <div class="talk-item">
-        <div class="meta">${item.time}</div>
-        <div>${item.html}</div>
-      </div>
-    `
-  })
-})()
-</script>
+<footer>© <!--SITE_AUTHOR--></footer>
 </body>
 </html>
