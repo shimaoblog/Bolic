@@ -16,7 +16,8 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install gray-matter marked
+        run: npm install gray-matter marked js-yaml
+
 
       - name: Run build script render all pages
         run: node build.js
