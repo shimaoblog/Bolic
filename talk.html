@@ -3,35 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>说说</title>
+<title>说说 | Demo</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
-  <h1>说说 / Talk</h1>
+  <h1>Demo</h1>
   <nav style="margin-top:0.5rem;">
-    <a href="index.html">← 返回首页</a>
+    <a href="./index.html">首页</a><a href="./talk.html">说说</a><a href="./page.html">关于</a><a href="./feed.xml">RSS</a>
   </nav>
 </header>
 
-<main id="talkList"></main>
+<main id="talkList">
 
-<footer></footer>
+<div class="talk-item">
+  <div class="meta">Sat Jul 25 2026 00:00:00 GMT+0000 (Coordinated Universal Time)</div>
+  <div><p>今日碎碎念内容</p>
+</div>
+</div>
 
-<script src="js/main.js"></script>
-<script>
-(async ()=>{
-  const talks = await loadTalks();
-  const box = document.getElementById("talkList");
-  talks.forEach(item => {
-    box.innerHTML += `
-      <div class="talk-item">
-        <div class="meta">${item.time}</div>
-        <div>${item.html}</div>
-      </div>
-    `
-  })
-})()
-</script>
+</main>
+
+<footer>© Demo</footer>
 </body>
 </html>
