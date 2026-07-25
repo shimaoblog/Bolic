@@ -4,14 +4,14 @@ const matter = require('gray-matter');
 const marked = require('marked');
 const config = require('./_config.yml');
 
-// ====================== 全局统一配置（只改这里全站生效） ======================
+// ====================== 全局统一配置 ======================
 const SITE_TITLE = config.site.title;
 const SITE_AUTHOR = config.site.author;
 const SITE_URL = config.site.url;
 const RSS_LIMIT = config.site.rss_limit;
 const RANDOM_COVER = config.site.random_cover_api;
 
-// 导航菜单全局数组，增删改一处所有页面同步更新
+// 导航菜单
 const navItems = [
   { label: '首页', href: './index.html' },
   { label: '说说', href: './talk.html' },
@@ -23,21 +23,21 @@ navItems.forEach(item => {
   navHtml += `<a href="${item.href}">${item.label}</a>`;
 });
 
-// 输出目录清理重建
+// 输出目录
 const DIST = './dist';
 if (fs.existsSync(DIST)) fs.rmSync(DIST, { recursive: true, force: true });
 fs.mkdirSync(DIST, { recursive: true });
 
-// 复制静态资源 css
+// 复制静态资源
 fs.cpSync('./css', path.join(DIST, 'css'), { recursive: true });
 
-// 读取所有页面模板文本
+// 读取模板
 const tplIndex = fs.readFileSync('./index.html', 'utf8');
 const tplPost = fs.readFileSync('./post.html', 'utf8');
 const tplTalk = fs.readFileSync('./talk.html', 'utf8');
 const tplPage = fs.readFileSync('./page.html', 'utf8');
 
-// ====================== 解析文章 MD ======================
+// ====================== 解析文章 ======================
 const postSourceDir = './source/posts';
 const postFiles = fs.readdirSync(postSourceDir).filter(f => f.endsWith('.md'));
 let posts = [];
@@ -55,10 +55,10 @@ postFiles.forEach(file => {
     excerpt: marked.parse(content).replace(/<[^>]+>/g, '').slice(0, 100)
   });
 });
-// 时间倒序排序
+
 posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// ====================== 解析说说 MD ======================
+// ====================== 解析说说 ======================
 const talkSourceDir = './source/talks';
 const talkFiles = fs.readdirSync(talkSourceDir).filter(f => f.endsWith('.md'));
 let talks = [];
@@ -71,9 +71,10 @@ talkFiles.forEach(file => {
     html: marked.parse(content)
   });
 });
+
 talks.sort((a, b) => new Date(b.time) - new Date(a.time));
 
-// ====================== 1. 渲染首页 index.html ======================
+// ====================== 1. 首页 index.html ======================
 let indexListHtml = '';
 posts.forEach(p => {
   indexListHtml += `
@@ -94,10 +95,78 @@ let finalIndex = tplIndex
 
 fs.writeFileSync(path.join(DIST, 'index.html'), finalIndex, 'utf8');
 
-// ====================== 2. 批量渲染每一篇独立文章 posts/xxx.html ======================
+// ====================== 2. 单篇文章静态页 ======================
 const postOutDir = path.join(DIST, 'posts');
 fs.mkdirSync(postOutDir, { recursive: true });
 
+posts.forEach(p => {
+  let articleBlock = `
+<img class="post-big-img" src="${p.cover}">
+<h1>${p.title}</h1>
+<div class="meta">发布于 ${p.date}</div>
+<div style="margin-top:2rem;">${p.html}</div>
+`;
+
+  let singlePostPage = tplPost
+    .replace(/<!--SITE_TITLE-->/g, SITE_TITLE)
+    .replace(/<!--SITE_AUTHOR-->/g, SITE_AUTHOR)
+    .replace(/<!--ARTICLE_TITLE-->/g, p.title)
+    .replace('<!--NAV_LINKS-->', navHtml)
+    .replace('<!--REPLACE_ARTICLE_CONTENT-->', articleBlock);
+
+  fs.writeFileSync(path.join(postOutDir, `${p.id}.html`), singlePostPage, 'utf8');
+});
+
+// ====================== 3. 说说 talk.html ======================
+let talkListHtml = '';
+talks.forEach(t => {
+  talkListHtml += `
+<div class="talk-item">
+  <div class="meta">${t.time}</div>
+  <div>${t.html}</div>
+</div>
+`;
+});
+
+let finalTalk = tplTalk
+  .replace(/<!--SITE_TITLE-->/g, SITE_TITLE)
+  .replace(/<!--SITE_AUTHOR-->/g, SITE_AUTHOR)
+  .replace('<!--NAV_LINKS-->', navHtml)
+  .replace('<!--REPLACE_TALK_LIST-->', talkListHtml);
+
+fs.writeFileSync(path.join(DIST, 'talk.html'), finalTalk, 'utf8');
+
+// ====================== 4. page.html ======================
+let finalPage = tplPage
+  .replace(/<!--SITE_TITLE-->/g, SITE_TITLE)
+  .replace(/<!--SITE_AUTHOR-->/g, SITE_AUTHOR)
+  .replace('<!--NAV_LINKS-->', navHtml);
+
+fs.writeFileSync(path.join(DIST, 'page.html'), finalPage, 'utf8');
+
+// ====================== 5. RSS ======================
+let rssXml = `<rss version="2.0">
+<channel>
+<title>${SITE_TITLE}</title>
+<link>${SITE_URL}</link>
+<description>${config.site.description}</description>
+`;
+
+posts.slice(0, RSS_LIMIT).forEach(p => {
+  rssXml += `
+<item>
+<title>${p.title}</title>
+<link>${SITE_URL}/posts/${p.id}.html</link>
+<pubDate>${new Date(p.date).toUTCString()}</pubDate>
+<description>${p.excerpt}</description>
+</item>
+`;
+});
+
+rssXml += `</channel></rss>`;
+fs.writeFileSync(path.join(DIST, 'feed.xml'), rssXml, 'utf8');
+
+console.log('✅ 全站静态页面构建完成，输出目录：dist');
 posts.forEach(p => {
   let articleBlock = `
 <img class="post-big-img" src="${p.cover}">
