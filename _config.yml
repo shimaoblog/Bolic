@@ -1,0 +1,7 @@
+site:
+  title: Demo
+  author: Demo
+  url: "https://shimaoblog.github.io/Bolic/"
+  description: DemoSite
+  rss_limit: 30
+  random_cover_api: "https://acg.203666.xyz/api.php?type=img"
