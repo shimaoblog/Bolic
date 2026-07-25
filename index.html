@@ -3,41 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>首页</title>
+<title><!--SITE_TITLE--> | 首页</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="alternate" type="application/rss+xml" href="feed.xml" title="RSS订阅">
 </head>
 <body>
 <header>
-  <h1>Neko Blog</h1>
+  <h1><!--SITE_TITLE--></h1>
   <nav style="margin-top:0.5rem;">
-    <a href="index.html">首页</a>
-    <a href="talk.html">说说</a>
-    <a href="page.html">关于</a>
-    <a href="feed.xml">RSS</a>
+    <!--NAV_LINKS-->
   </nav>
 </header>
 
-<main id="postList"></main>
+<main id="postList">
+<!--REPLACE_POST_LIST-->
+</main>
 
-<footer>Powered by Bolic</footer>
-
-<script src="js/main.js"></script>
-<script>
-(async ()=>{
-  const posts = await loadPosts();
-  const wrap = document.getElementById("postList");
-  posts.forEach(item => {
-    wrap.innerHTML += `
-      <div class="post-card">
-        <img class="post-big-img" src="${item.cover}" alt="${item.title}">
-        <h2 class="post-title"><a href="post.html?id=${item.id}">${item.title}</a></h2>
-        <div class="meta">${item.date}</div>
-        <div>${item.excerpt}……</div>
-      </div>
-    `
-  })
-})()
-</script>
+<footer>© <!--SITE_AUTHOR--> | Powered by Bolic</footer>
 </body>
 </html>
