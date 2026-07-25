@@ -3,40 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文章详情</title>
+<title>第一篇测试文章 | Demo</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
-  <h1><a href="index.html" style="color:#000;text-decoration:none;">Neko Blog</a></h1>
+  <h1>Demo</h1>
   <nav style="margin-top:0.5rem;">
-    <a href="index.html">← 返回首页</a>
+    <a href="./index.html">首页</a><a href="./talk.html">说说</a><a href="./page.html">关于</a><a href="./feed.xml">RSS</a>
   </nav>
 </header>
 
-<main id="articleBox"></main>
+<main id="articleBox">
 
-<footer></footer>
+<img class="post-big-img" src="https://acg.203666.xyz/api.php?type=img">
+<h1>第一篇测试文章</h1>
+<div class="meta">发布于 Sat Jul 25 2026 00:00:00 GMT+0000 (Coordinated Universal Time)</div>
+<div style="margin-top:2rem;"><p>正文内容随便写，这里是文章主体。</p>
+</div>
 
-<script src="js/main.js"></script>
-<script>
-(async ()=>{
-  const pid = getUrlParam("id");
-  const allPosts = await loadPosts();
-  const data = allPosts.find(v => v.id === pid);
+</main>
 
-  if (!data) {
-    document.body.innerHTML = '<h2>文章不存在</h2><p><a href="index.html">返回首页</a></p>';
-    return;
-  }
-
-  document.getElementById("articleBox").innerHTML = `
-    <img class="post-big-img" src="${data.cover}">
-    <h1>${data.title}</h1>
-    <div class="meta">发布于 ${data.date}</div>
-    <div style="margin-top:2rem;">${data.html}</div>
-  `;
-})()
-</script>
+<footer>© Demo</footer>
 </body>
 </html>
