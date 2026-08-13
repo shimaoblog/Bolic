@@ -36,10 +36,10 @@ fs.mkdirSync(DIST, { recursive: true });
 fs.cpSync('./css', path.join(DIST, 'css'), { recursive: true });
 
 // 读取页面模板文件
-const tplIndex = fs.readFileSync('.index.html', 'utf8');
-const tplPost = fs.readFileSync('.post.html', 'utf8');
-const tplTalk = fs.readFileSync('.talk.html', 'utf8');
-const tplPage = fs.readFileSync('.page.html', 'utf8');
+const tplIndex = fs.readFileSync('./index.html', 'utf8');
+const tplPost = fs.readFileSync('./post.html', 'utf8');
+const tplTalk = fs.readFileSync('./talk.html', 'utf8');
+const tplPage = fs.readFileSync('./page.html', 'utf8');
 
 // ====================== 解析文章 Markdown ======================
 const postSourceDir = './source/posts';
