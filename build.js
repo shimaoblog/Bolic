@@ -17,10 +17,10 @@ const RANDOM_COVER = config.site.random_cover_api;
 
 // 导航菜单全局配置
 const navItems = [
-  { label: '首页', href: '/index.html' },
-  { label: '说说', href: '/talk.html' },
-  { label: '关于', href: '/page.html' },
-  { label: 'RSS', href: '/feed.xml' }
+  { label: '首页', href: 'https://blog.imshimao.com/Bolic/index.html' },
+  { label: '说说', href: 'https://blog.imshimao.com/Bolic/talk.html' },
+  { label: '关于', href: 'https://blog.imshimao.com/Bolic/page.html' },
+  { label: 'RSS', href: 'https://blog.imshimao.com/Bolic/feed.xml' }
 ];
 let navHtml = '';
 navItems.forEach(item => {
