@@ -17,10 +17,10 @@ const RANDOM_COVER = config.site.random_cover_api;
 
 // 导航菜单全局配置
 const navItems = [
-  { label: '首页', href: '.bolic/index.html' },
-  { label: '说说', href: '.bolic/talk.html' },
-  { label: '关于', href: '.bolic/page.html' },
-  { label: 'RSS', href: '.bolic/feed.xml' }
+  { label: '首页', href: 'index.html' },
+  { label: '说说', href: 'talk.html' },
+  { label: '关于', href: 'page.html' },
+  { label: 'RSS', href: 'feed.xml' }
 ];
 let navHtml = '';
 navItems.forEach(item => {
